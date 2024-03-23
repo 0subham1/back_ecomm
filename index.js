@@ -12,6 +12,11 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
+app.use("/user",require("./src/route/user"))
+// app.use("",require("./src/route/item"))
+// app.use("",require("./src/route/order"))
+
+
 mongoose.connect(process.env.DB_URL).then(() => {
   console.log("db connected");
 });
