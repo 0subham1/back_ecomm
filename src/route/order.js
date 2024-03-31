@@ -1,39 +1,89 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const router = express.Router();
+const router = require("express").Router();
+const ORDER = require("../model/order");
+const USER = require("../model/user");
+const ITEM = require("../model/item");
 
-app.use(express.json());
-app.use(cors());
+const resHandler = require("../middleware/resHandler");
+//res, code, isSuccess, msg, data
+//CRUD
 
-const ORDER = require("../db/ordersModel");
+router.post("/create", async (req, res) => {
+  try {
+    let orderList = await ORDER.find();
+    let orderKey = "Order_" + (orderList.length + 1);
 
-router.get("/orders", async (req, res) => {
-  let result = await ORDER.find();
-  res.send(result);
+    const user = await USER.findById(req?.body?.userId);
+    let itemListErr = false;
+    req?.body?.itemList?.map((a) => {
+      if (!a.name) {
+        itemListErr = true;
+        return resHandler(res, 400, false, "invalid item name");
+      }
+      if (a.qty == 0) {
+        itemListErr = true;
+        return resHandler(res, 400, false, "invalid item qty");
+      }
+    });
+
+    if (!req.body?.userName)
+      return resHandler(res, 400, false, "userName empty");
+    if (!req.body?.totalAmount || req.body?.totalAmount == 0)
+      return resHandler(res, 400, false, "invalid totalAmount ");
+
+    let data = {
+      orderId: orderKey,
+      itemList: req?.body?.itemList,
+      userId: req?.body?.userId,
+      userName: req?.body?.userName,
+      totalAmount: req?.body?.totalAmount,
+    };
+    if (!itemListErr) {
+      let result = await ORDER.create(data);
+      resHandler(res, 200, true, "Order Created", result);
+    }
+  } catch (err) {
+    resHandler(res, 500, false, "Error Placing Order", err);
+  }
 });
 
-router.get("/orders/:_id", async (req, res) => {
-  let result = await ORDER.findOne(req.params);
-  res.send(result);
+router.get("/list", async (req, res) => {
+  try {
+    let items = await ORDER.find();
+    resHandler(res, 200, true, "orderlist", items);
+  } catch (err) {
+    resHandler(res, 500, false, "internal server error", err);
+  }
 });
 
-router.get("/userOrders/:_id", async (req, res) => {
-  let result = await ORDER.find({ userId: req.params });
-  res.send(result);
+router.get("/get/:_id", async (req, res) => {
+  try {
+    let orderById = await ORDER.findOne(req.params);
+    resHandler(res, 200, true, "orderById", orderById);
+  } catch (err) {
+    resHandler(res, 400, false, "order not found");
+  }
 });
 
-router.post("/addOrder", async (req, res) => {
-  let orderList = await orders.find();
-  let orderKey = "ORDER_" + (orderList.length + 1);
-  let obj = { ...req.body, orderId: orderKey };
-  let result = await new ORDER(obj).save();
-  res.send(result);
+router.get("/byUser/:_id", async (req, res) => {
+  try {
+    let orderByUser = await ORDER.find({ userId: req.params });
+    resHandler(res, 200, true, "orderByUser", orderByUser);
+  } catch (err) {
+    resHandler(res, 400, false, "order not found");
+  }
 });
 
-//admin
 router.delete("/deleteOrder/:_id", async (req, res) => {
-  let result = await ORDER.deleteOne(req.params);
-  res.send(result);
+  try {
+    const order = await ORDER.findOne(req.params);
+    let result = await ORDER.deleteOne(req.params);
+    if (result?.deletedCount > 0) {
+      resHandler(res, 200, true, "order deleted", order);
+    } else {
+      resHandler(res, 200, true, "order not deleted");
+    }
+  } catch (err) {
+    resHandler(res, 400, false, "order not found");
+  }
 });
 module.exports = router;

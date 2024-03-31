@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema(
   {
-    bookList: Array,
+    orderId: String,
+    itemList: Array,
     userId: String,
     userName: String,
-    total: Number,
-    orderId: String,
+    totalAmount: Number,
   },
   { timestamps: true }
 );

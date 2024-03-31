@@ -1,0 +1,16 @@
+{
+    "itemList": [
+        {
+            "_id": "6608e63ce1d9d24de7a05618",
+            "category": {"value":"dinner","label":"dinner"},
+            "name":"idli",
+            "price": 20,
+            "qty": 4,
+            "amount": 80
+        }
+    ],
+    "userId": "6609071048efde3db53067c8",
+    "userName": "subham",
+    "totalAmount": 80
+
+}
