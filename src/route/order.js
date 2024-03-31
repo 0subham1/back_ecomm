@@ -7,12 +7,13 @@ const resHandler = require("../middleware/resHandler");
 //res, code, isSuccess, msg, data
 //CRUD
 
-router.post("/create", async (req, res) => {
+router.post("/orderCreate", async (req, res) => {
   try {
     let orderList = await ORDER.find();
-    let orderKey = "Order_" + (orderList.length + 1);
+    let orderKey = "order_" + (orderList.length + 1);
 
     const user = await USER.findById(req?.body?.userId);
+
     let itemListErr = false;
     req?.body?.itemList?.map((a) => {
       if (!a.name) {
@@ -46,7 +47,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
-router.get("/list", async (req, res) => {
+router.get("/orderList", async (req, res) => {
   try {
     let items = await ORDER.find();
     resHandler(res, 200, true, "orderlist", items);
@@ -55,7 +56,7 @@ router.get("/list", async (req, res) => {
   }
 });
 
-router.get("/get/:_id", async (req, res) => {
+router.get("/:_id/orderById", async (req, res) => {
   try {
     let orderById = await ORDER.findOne(req.params);
     resHandler(res, 200, true, "orderById", orderById);
@@ -64,16 +65,16 @@ router.get("/get/:_id", async (req, res) => {
   }
 });
 
-router.get("/byUser/:_id", async (req, res) => {
+router.get("/:_id/orderByUserId", async (req, res) => {
   try {
     let orderByUser = await ORDER.find({ userId: req.params });
-    resHandler(res, 200, true, "orderByUser", orderByUser);
+    resHandler(res, 200, true, "orderByUserId", orderByUser);
   } catch (err) {
     resHandler(res, 400, false, "order not found");
   }
 });
 
-router.delete("/deleteOrder/:_id", async (req, res) => {
+router.delete("/:_id/orderDelete", async (req, res) => {
   try {
     const order = await ORDER.findOne(req.params);
     let result = await ORDER.deleteOne(req.params);

@@ -5,7 +5,7 @@ const resHandler = require("../middleware/resHandler");
 //res, code, isSuccess, msg, data
 //CRUD
 
-router.post("/create", async (req, res) => {
+router.post("/itemCreate", async (req, res) => {
   try {
     let exist = await ITEM.findOne({
       name: req?.body?.name.trim().toLowerCase(),
@@ -30,7 +30,7 @@ router.post("/create", async (req, res) => {
     resHandler(res, 500, false, "internal server error", err);
   }
 });
-router.get("/list", async (req, res) => {
+router.get("/itemList", async (req, res) => {
   try {
     ITEM.find()
       .then((items) => {
@@ -44,7 +44,7 @@ router.get("/list", async (req, res) => {
   }
 });
 
-router.get("/get/:_id", async (req, res) => {
+router.get("/:_id/itemById", async (req, res) => {
   try {
     const item = await ITEM.findById(req.params);
     // const item = await ITEM.findOne(req.params)
@@ -53,7 +53,7 @@ router.get("/get/:_id", async (req, res) => {
     resHandler(res, 400, false, "item not found");
   }
 });
-router.put("/edit/:_id", async (req, res) => {
+router.put("/:_id/itemEdit", async (req, res) => {
   try {
     if (!req.body?.name) return resHandler(res, 400, false, "name empty");
     if (!req.body?.price) return resHandler(res, 400, false, "price empty");
@@ -73,7 +73,7 @@ router.put("/edit/:_id", async (req, res) => {
   }
 });
 
-router.delete("/delete/:_id", async (req, res) => {
+router.delete("/:_id/itemDelete", async (req, res) => {
   try {
     const item = await ITEM.findOne(req.params);
     let result = await ITEM.deleteOne(req.params);

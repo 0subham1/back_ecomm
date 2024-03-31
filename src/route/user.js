@@ -10,7 +10,7 @@ const jwtKey = process.env.JWT_KEY;
 //res, code, isSuccess, msg, data
 //CRUD
 
-router.post("/create", async (req, res) => {
+router.post("/userCreate", async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const hashPass = await bcrypt.hash(req.body.password, salt);
@@ -41,7 +41,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
-router.get("/list", async (req, res) => {
+router.get("/userList", async (req, res) => {
   try {
     USER.find()
       .then((users) => {
@@ -54,7 +54,7 @@ router.get("/list", async (req, res) => {
     resHandler(res, 500, false, "internal server error", err);
   }
 });
-router.get("/get/:_id", async (req, res) => {
+router.get("/:_id/userById", async (req, res) => {
   try {
     const user = await USER.findById(req.params);
     resHandler(res, 200, true, "user found", user);
@@ -63,7 +63,7 @@ router.get("/get/:_id", async (req, res) => {
   }
 });
 
-// router.get("/getUser/:_id", async (req, res) => {
+// router.get("/:_id/userById", async (req, res) => {
 //   await USER.findOne(req.params)
 //     .then((user) => {
 //       resHandler(res, 200, true, "user found", user);
@@ -73,7 +73,7 @@ router.get("/get/:_id", async (req, res) => {
 //     });
 // });
 
-router.put("/edit/:_id", async (req, res) => {
+router.put("/:_id/userEdit", async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const hashPass = await bcrypt.hash(req?.body?.password, salt);
@@ -99,7 +99,7 @@ router.put("/edit/:_id", async (req, res) => {
   }
 });
 
-router.delete("/delete/:_id", async (req, res) => {
+router.delete("/:_id/userDelete", async (req, res) => {
   try {
     const user = await USER.findOne(req.params);
     let result = await USER.deleteOne(req.params);
