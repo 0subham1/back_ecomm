@@ -1,9 +1,11 @@
+// import { resHandler } from "../middleware/resHandler";
+// import { verifyToken } from "../middleware/verifyToken";
+const resHandler = require("../middleware/resHandler");
+const verifyToken = require("../middleware/verifyToken");
+
 const router = require("express").Router();
 const USER = require("../model/user");
-const resHandler = require("../middleware/resHandler");
-
 const bcrypt = require("bcrypt");
-const verifyToken = require("../middleware/verifyToken");
 const jwt = require("jsonwebtoken");
 const jwtKey = process.env.JWT_KEY;
 
@@ -41,15 +43,21 @@ router.post("/userCreate", async (req, res) => {
   }
 });
 
-router.get("/userList", async (req, res) => {
+//api with auth
+router.get("/userList", verifyToken, async (req, res) => {
   try {
-    USER.find()
-      .then((users) => {
-        resHandler(res, 200, true, "userlist", users);
-      })
-      .catch((err) => {
-        resHandler(res, 500, false, err);
-      });
+    jwt.verify(req.token, jwtKey, (err, authData) => {
+      if (err) return resHandler(res, 403, false, "auth fail", err);
+      // let users = await USER.find();
+      // resHandler(res, 200, true, "userlist", users);
+      USER.find()
+        .then((users) => {
+          resHandler(res, 200, true, "userlist", users);
+        })
+        .catch((err) => {
+          resHandler(res, 500, false, err);
+        });
+    });
   } catch (err) {
     resHandler(res, 500, false, "internal server error", err);
   }
@@ -151,7 +159,7 @@ router.post("/generateToken", async (req, res) => {
       if (err) {
         resHandler(res, 400, false, "token not generated", err);
       } else {
-        resHandler(res, 200, false, "token  generated", { token });
+        resHandler(res, 200, true, "token  generated", { token });
       }
     });
   } catch (err) {
@@ -161,7 +169,6 @@ router.post("/generateToken", async (req, res) => {
 
 router.post("/validateToken", verifyToken, async (req, res) => {
   try {
-    let jwtKey = process.env.JWT_KEY;
     jwt.verify(req.token, jwtKey, (err, authData) => {
       if (err) {
         resHandler(res, 403, false, "auth fail", err);
