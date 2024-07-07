@@ -137,7 +137,7 @@ router.post("/login", async (req, res) => {
         if (err) {
           resHandler(res, 400, false, "token not generated", err);
         } else {
-          resHandler(res, 200, false, "login successful", { user, token });
+          resHandler(res, 200, true, "login successful", { user, token });
         }
       });
     } else {
