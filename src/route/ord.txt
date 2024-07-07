@@ -1,16 +1,20 @@
+https://back-foodcart.vercel.app/order/orderCreate
+
 {
     "itemList": [
         {
-            "_id": "6608e63ce1d9d24de7a05618",
-            "category": {"value":"dinner","label":"dinner"},
-            "name":"idli",
-            "price": 20,
-            "qty": 4,
-            "amount": 80
+            "_id": "668a102cb0093031b128f2f4",
+            "name": "biryani",
+            "price": 120,
+            "category": {
+                "value": "lunch",
+                "label": "lunch"
+            },
+            "qty": 2,
+            "amount": 240
         }
     ],
     "userId": "6609071048efde3db53067c8",
     "userName": "subham",
-    "totalAmount": 80
-
+    "totalAmount": 240
 }

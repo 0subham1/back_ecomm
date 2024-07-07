@@ -8,7 +8,10 @@ https://back-foodcart.vercel.app/item/:_id/itemById
 
 POST
 https://back-foodcart.vercel.app/item/itemCreate
-
+category:
+breakfast
+dinner
+lunch
 
 
 
