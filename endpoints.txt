@@ -1,13 +1,28 @@
+https://back-foodcart.vercel.app/
+
 ITEMS
 
-GET
-https://back-foodcart.vercel.app/item/itemList
+item/itemList
+item/itemCreate
+item/:_id/itemDelete
+item/:_id/itemById
+item/:_id/itemEdit
 
-GET
-https://back-foodcart.vercel.app/item/:_id/itemById
+USERS
 
-POST
-https://back-foodcart.vercel.app/item/itemCreate
+/userList
+/userCreate
+/:_id/userById
+/:_id/userEdit
+/:_id/userDelete
+/login
+
+ORDERS
+/:_id/orderDelete
+/:_id/orderByUserId
+/orderList
+/orderCreate
+
 category:
 breakfast
 dinner
